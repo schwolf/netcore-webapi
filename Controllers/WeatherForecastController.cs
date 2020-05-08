@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,10 +17,13 @@ namespace netcore_webapi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IConfiguration _config;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
+
         }
 
         [HttpGet]
@@ -31,7 +34,7 @@ namespace netcore_webapi.Controllers
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                Summary = Summaries[rng.Next(Summaries.Length)] + $" {_config["Logging:LogLevel:Default"]}"
             })
             .ToArray();
         }
